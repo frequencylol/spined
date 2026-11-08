@@ -1,0 +1,66 @@
+{
+  "name": "spined-local",
+  "version": "3.0.0",
+  "description": "spined.lol — game downloader & library — created by 0847x",
+  "main": "main.js",
+  "scripts": {
+    "start":    "node server.js",
+    "electron": "electron .",
+    "build":    "electron-builder --win --x64",
+    "build:portable": "electron-builder --win portable --x64",
+    "build:nsis":     "electron-builder --win nsis --x64"
+  },
+  "dependencies": {
+    "archiver": "^7.0.0",
+    "axios":    "^1.7.0",
+    "express":  "^4.19.0",
+    "ws":       "^8.17.0"
+  },
+  "devDependencies": {
+    "electron":         "^29.0.0",
+    "electron-builder": "^24.13.0"
+  },
+  "build": {
+    "appId":       "lol.spined.app",
+    "productName": "spined.lol",
+    "asar": false,
+    "win": {
+      "target": ["portable", "nsis"],
+      "icon": "public/icon.ico",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "spined.lol"
+    },
+    "portable": {
+      "artifactName": "spined-${version}-portable.exe"
+    },
+    "files": [
+      "server.js",
+      "main.js",
+      "public/**",
+      "tools/**",
+      "node_modules/**",
+      "!node_modules/**/test/**",
+      "!node_modules/**/*.md",
+      "!node_modules/**/LICENSE*",
+      "!node_modules/**/.github/**"
+    ],
+    "extraResources": [
+      {
+        "from": "tools",
+        "to":   "tools",
+        "filter": ["**/*"]
+      }
+    ],
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    }
+  }
+}

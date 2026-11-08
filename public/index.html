@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>spined.lol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#111111;
+  --bg1:#181818;
+  --bg2:#1f1f1f;
+  --bg3:#252525;
+  --bg4:#2c2c2c;
+  --bg5:#333333;
+  --border:#282828;
+  --border2:#333333;
+  --accent:#0074e4;
+  --accentH:#005ec0;
+  --accentD:#004fa8;
+  --accentL:rgba(0,116,228,.13);
+  --accentG:rgba(0,116,228,.06);
+  --text:#f0f0f0;
+  --text2:#a0a0a0;
+  --text3:#5a5a5a;
+  --success:#22c55e;
+  --error:#ef4444;
+  --warn:#f59e0b;
+  --r:6px;--r2:10px;--r3:14px;
+  --sidebar-w:220px;
+  --topbar-h:46px;
+  --dlbar-h:52px;
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+html,body{height:100%;background:var(--bg0);color:var(--text);font-family:var(--font);font-size:13px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;height:100vh;flex-direction:column}
+
+/* ── topbar ───────────────────────────────────────────────────────── */
+#topbar{
+  display:flex;align-items:center;padding:0 18px;height:var(--topbar-h);
+  background:var(--bg1);border-bottom:1px solid var(--border);
+  flex-shrink:0;-webkit-app-region:drag;gap:14px;
+}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;-webkit-app-region:no-drag;flex-shrink:0}
+.logo-spine{
+  width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.logo-spine img{width:26px;height:26px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(0,116,228,.5))}
+.logo-name{font-size:14px;font-weight:700;letter-spacing:-.5px;color:var(--text)}
+.logo-name span{color:var(--accent)}
+
+.topbar-search{flex:1;max-width:400px;position:relative;-webkit-app-region:no-drag}
+.search-wrap{position:relative}
+.search-wrap input{
+  width:100%;padding:7px 36px 7px 36px;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  color:var(--text);font-family:var(--font);font-size:12.5px;outline:none;
+  transition:border-color .15s,background .15s;
+}
+.search-wrap input:focus{border-color:var(--accent);background:var(--bg4)}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.search-ico svg{width:14px;height:14px}
+
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;-webkit-app-region:no-drag;flex-shrink:0}
+.tool-pill{
+  display:flex;align-items:center;gap:5px;padding:4px 9px;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:20px;
+  font-size:10.5px;color:var(--text3);font-weight:500;
+}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--error);flex-shrink:0;transition:background .3s}
+.dot.ok{background:var(--success)}
+
+#tools-btn{
+  display:flex;align-items:center;gap:5px;padding:5px 11px;
+  background:transparent;border:1px solid var(--border2);border-radius:var(--r);
+  color:var(--text2);font-family:var(--font);font-size:11.5px;cursor:pointer;transition:all .15s;
+}
+#tools-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accentL)}
+#tools-btn svg{width:12px;height:12px}
+
+/* ── body layout ─────────────────────────────────────────────────── */
+#body{display:flex;flex:1;overflow:hidden}
+
+/* ── sidebar ─────────────────────────────────────────────────────── */
+#sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--bg1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;padding:10px 8px;
+  gap:1px;
+}
+.sidebar-label{
+  font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);padding:10px 10px 5px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;
+  border-radius:var(--r);cursor:pointer;color:var(--text2);
+  font-size:12.5px;font-weight:500;transition:background .1s,color .1s;
+  text-decoration:none;user-select:none;
+}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;stroke-width:1.9}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--accentL);color:var(--accent)}
+.nav-item .badge{
+  margin-left:auto;background:var(--bg4);border-radius:12px;
+  padding:1px 7px;font-size:9.5px;color:var(--text2);font-weight:700;
+}
+.nav-item.active .badge{background:rgba(0,116,228,.25);color:var(--accent)}
+.sidebar-sep{height:1px;background:var(--border);margin:5px 4px}
+#job-indicator{
+  display:none;align-items:center;gap:7px;padding:9px 10px;
+  margin:4px 0;border-radius:var(--r);
+  background:rgba(0,116,228,.08);border:1px solid rgba(0,116,228,.18);
+}
+#job-indicator.visible{display:flex}
+#job-indicator .spin{width:9px;height:9px;border-color:rgba(0,116,228,.2);border-top-color:var(--accent)}
+#job-ind-text{font-size:10.5px;color:var(--accent);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── main ────────────────────────────────────────────────────────── */
+#main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.page{display:none;flex:1;overflow-y:auto;padding:22px 24px}
+.page.active{display:block}
+.page-header{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.page-title{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.page-count{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:14px;
+  padding:2px 10px;font-size:10.5px;color:var(--text3);font-weight:600;
+}
+
+/* ── discover grid (landscape banners) ───────────────────────────── */
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:10px}
+.game-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  overflow:hidden;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;
+}
+.game-card:hover{
+  transform:translateY(-2px);border-color:var(--accent);
+  box-shadow:0 6px 24px rgba(0,0,0,.55),0 0 0 1px rgba(0,116,228,.12);
+}
+.game-card-img-wrap{position:relative;width:100%;aspect-ratio:460/215;background:var(--bg3);overflow:hidden}
+.game-card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.img-placeholder{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+  background:linear-gradient(135deg,var(--bg3),var(--bg4));
+}
+.img-placeholder .ph-letter{
+  font-size:38px;font-weight:800;
+  color:transparent;
+  background:linear-gradient(135deg,var(--accent),#38bdf8);
+  -webkit-background-clip:text;background-clip:text;
+  letter-spacing:-2px;line-height:1;
+  text-shadow:none;
+  opacity:.6;
+}
+.img-placeholder .ph-name{
+  font-size:9px;color:var(--text3);text-align:center;
+  max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+/* profile badge on card */
+.profile-badge{
+  position:absolute;top:6px;right:6px;
+  background:rgba(0,116,228,.85);backdrop-filter:blur(4px);
+  border:1px solid rgba(0,116,228,.4);
+  color:#fff;font-size:9px;font-weight:700;letter-spacing:.04em;
+  padding:2px 6px;border-radius:10px;text-transform:uppercase;
+  pointer-events:none;
+}
+.game-card-body{padding:9px 11px 11px}
+.game-card-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);letter-spacing:-.2px}
+.game-card-price{font-size:10.5px;color:var(--accent);margin-top:3px;font-weight:500}
+
+/* ── library grid (portrait cards, Epic-style) ───────────────────── */
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.lib-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.lib-card:hover{border-color:rgba(255,255,255,.18);box-shadow:0 6px 22px rgba(0,0,0,.5)}
+.lib-card-art{position:relative;width:100%;aspect-ratio:2/3;overflow:hidden;background:var(--bg3)}
+.lib-card-art img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .2s}
+.lib-card:hover .lib-card-art img{filter:brightness(.65)}
+.lib-card-hover-overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+  opacity:0;transition:opacity .2s;
+}
+.lib-card:hover .lib-card-hover-overlay{opacity:1}
+/* portrait placeholder */
+.lib-placeholder{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(160deg,var(--bg3),var(--bg4));
+  pointer-events:none;
+}
+.lib-placeholder .ph-letter{
+  font-size:52px;font-weight:800;
+  color:transparent;
+  background:linear-gradient(135deg,var(--accent),#38bdf8);
+  -webkit-background-clip:text;background-clip:text;
+  opacity:.5;line-height:1;
+}
+.lib-placeholder .ph-name{
+  font-size:10px;color:var(--text3);text-align:center;
+  padding:0 12px;overflow:hidden;text-overflow:ellipsis;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+}
+.btn-play-overlay{
+  display:flex;align-items:center;gap:6px;
+  padding:9px 20px;background:var(--accent);border:none;border-radius:var(--r);
+  color:#fff;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;
+  transition:background .15s;white-space:nowrap;position:relative;z-index:2;
+}
+.btn-play-overlay:hover{background:var(--accentH)}
+.btn-play-overlay svg{width:11px;height:11px}
+.btn-ctrl-overlay{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 14px;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.18);border-radius:var(--r);
+  color:#ccc;font-family:var(--font);font-size:11px;font-weight:500;cursor:pointer;
+  transition:all .15s;white-space:nowrap;position:relative;z-index:2;
+}
+.btn-ctrl-overlay:hover{background:rgba(0,0,0,.9);color:#fff}
+.btn-ctrl-overlay svg{width:12px;height:12px}
+.lib-card-info{padding:9px 11px 11px}
+.lib-card-name{font-size:11.5px;font-weight:600;color:var(--text);letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lib-card-sub{font-size:10px;color:var(--text3);margin-top:3px}
+
+.btn-play-overlay:disabled,.btn-ctrl-overlay:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── log page ────────────────────────────────────────────────────── */
+#log-container{
+  background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);
+  padding:14px;font-family:'SF Mono','Consolas','Cascadia Code',monospace;font-size:11.5px;line-height:1.65;
+  max-height:calc(100vh - 175px);overflow-y:auto;
+}
+.log-row{padding:1px 0;color:var(--text3)}
+.log-row.error{color:var(--error)}
+.log-row.warn{color:var(--warn)}
+.log-row.success{color:var(--success)}
+.log-row.cyan{color:#22d3ee}
+.log-clear-btn{
+  display:flex;align-items:center;gap:5px;padding:5px 11px;
+  background:transparent;border:1px solid var(--border2);border-radius:var(--r);
+  color:var(--text3);font-family:var(--font);font-size:11px;cursor:pointer;margin-left:auto;
+  transition:all .15s;
+}
+.log-clear-btn:hover{border-color:var(--error);color:var(--error)}
+
+/* ── tools page ──────────────────────────────────────────────────── */
+.tool-cards{display:flex;flex-direction:column;gap:1px;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.tool-card{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+}
+.tool-card:last-child{border-bottom:none}
+.tool-card-icon{
+  width:36px;height:36px;border-radius:8px;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0;
+}
+.tool-card-icon svg{width:18px;height:18px;stroke-width:1.7}
+.tool-card-name{font-size:13px;font-weight:600;color:var(--text)}
+.tool-card-desc{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.5}
+.tool-card-status{margin-left:auto;display:flex;align-items:center;flex-shrink:0}
+.status-badge{
+  display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:14px;
+  font-size:10.5px;font-weight:600;
+}
+.status-badge.ok{background:rgba(34,197,94,.1);color:var(--success);border:1px solid rgba(34,197,94,.22)}
+.status-badge.missing{background:rgba(239,68,68,.08);color:var(--error);border:1px solid rgba(239,68,68,.18)}
+.status-badge svg{width:11px;height:11px;stroke-width:2.5}
+.setup-hint{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;margin-bottom:16px;
+  background:var(--accentG);border:1px solid rgba(0,116,228,.2);border-radius:var(--r2);
+  font-size:11.5px;color:var(--text2);
+}
+.setup-hint svg{color:var(--accent);flex-shrink:0;width:14px;height:14px}
+
+/* ── profiles page ───────────────────────────────────────────────── */
+.profiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.profile-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  padding:12px 14px;display:flex;flex-direction:column;gap:4px;
+}
+.profile-card-name{font-size:12.5px;font-weight:700;color:var(--text)}
+.profile-card-id{font-size:10px;color:var(--text3)}
+.profile-card-exe{font-size:11px;color:var(--accent);font-family:'SF Mono',monospace;margin-top:2px}
+.profile-card-notes{font-size:10.5px;color:var(--text2);line-height:1.5;margin-top:4px}
+.profile-card-arch{
+  display:inline-flex;align-items:center;gap:4px;margin-top:4px;
+  padding:2px 7px;background:var(--bg3);border-radius:10px;
+  font-size:9.5px;font-weight:700;color:var(--text3);width:fit-content;
+}
+
+/* ── discover section label ──────────────────────────────────────── */
+.discover-section{margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.discover-section-title{font-size:13px;font-weight:700;color:var(--text2);letter-spacing:-.1px}
+.discover-section-count{font-size:10px;font-weight:600;color:var(--text3);background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:1px 8px}
+.size-badge{
+  position:absolute;bottom:6px;left:6px;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--text2);font-size:8.5px;font-weight:600;letter-spacing:.03em;
+  padding:2px 6px;border-radius:8px;
+  pointer-events:none;
+}
+.genre-badge{
+  position:absolute;bottom:6px;right:6px;
+  background:rgba(0,116,228,.78);backdrop-filter:blur(4px);
+  border:1px solid rgba(0,116,228,.3);
+  color:#fff;font-size:8px;font-weight:700;letter-spacing:.05em;
+  padding:2px 6px;border-radius:8px;text-transform:uppercase;
+  pointer-events:none;
+}
+
+/* ── empty state ─────────────────────────────────────────────────── */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:70px 0;color:var(--text3)}
+.empty svg{width:36px;height:36px;opacity:.18}
+.empty p{font-size:12.5px}
+
+/* ── download bar ────────────────────────────────────────────────── */
+#dl-bar{
+  display:none;flex-shrink:0;
+  background:var(--bg1);border-top:1px solid var(--border);
+  height:var(--dlbar-h);padding:0 20px;
+  align-items:center;gap:14px;
+}
+#dl-bar.visible{display:flex}
+
+.dl-thumb{
+  width:62px;height:36px;border-radius:5px;overflow:hidden;
+  background:var(--bg3);flex-shrink:0;border:1px solid var(--border2);
+}
+.dl-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+.dl-meta{flex:1;min-width:0}
+.dl-name-row{display:flex;align-items:baseline;gap:8px}
+.dl-game{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl-phase{font-size:10.5px;color:var(--text3);white-space:nowrap;flex-shrink:0}
+.dl-track{width:100%;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:6px}
+.dl-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),#38bdf8);
+  transition:width .22s ease-out;position:relative;overflow:hidden;min-width:0;
+}
+.dl-fill::after{
+  content:'';position:absolute;top:0;left:-60px;bottom:0;width:60px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  animation:shine 1.4s infinite;
+}
+@keyframes shine{to{left:110%}}
+.dl-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.dl-pct{font-size:12px;font-weight:700;color:var(--accent);min-width:38px;text-align:right}
+
+/* ── modal ───────────────────────────────────────────────────────── */
+#modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.82);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+}
+#modal-overlay.open{display:flex}
+#modal{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r3);
+  width:660px;max-width:calc(100vw - 40px);max-height:calc(100vh - 60px);
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 32px 80px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04);
+}
+.modal-header{position:relative;height:190px;overflow:hidden;background:var(--bg3);flex-shrink:0}
+.modal-header img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-header-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(17,17,17,0) 25%,var(--bg2) 100%)}
+.modal-close{
+  position:absolute;top:12px;right:12px;width:28px;height:28px;border:none;border-radius:50%;
+  background:rgba(0,0,0,.75);color:var(--text);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .15s;
+}
+.modal-close:hover{background:rgba(0,0,0,.95)}
+.modal-close svg{width:13px;height:13px;stroke-width:2.5}
+.modal-body{padding:14px 20px 20px;overflow-y:auto}
+.modal-name{font-size:19px;font-weight:800;line-height:1.2;color:var(--text);letter-spacing:-.4px}
+.modal-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.modal-tag{padding:3px 8px;background:var(--bg3);border:1px solid var(--border2);border-radius:14px;font-size:10.5px;color:var(--text3)}
+.modal-desc{margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.65;max-height:62px;overflow:hidden}
+.modal-hub{
+  margin-top:12px;padding:10px 13px;background:var(--bg3);
+  border:1px solid var(--border2);border-radius:var(--r);
+  display:flex;align-items:center;gap:10px;
+}
+.modal-hub-icon svg{width:15px;height:15px;stroke-width:2}
+.modal-hub-ok{color:var(--success);font-size:12.5px;font-weight:600}
+.modal-hub-no{color:var(--error);font-size:12.5px;font-weight:600}
+.modal-hub-sub{font-size:10.5px;color:var(--text3);margin-top:2px}
+/* profile note in modal */
+.modal-profile{
+  margin-top:8px;padding:8px 12px;
+  background:rgba(0,116,228,.06);border:1px solid rgba(0,116,228,.18);border-radius:var(--r);
+  font-size:10.5px;color:var(--text2);display:flex;gap:7px;align-items:flex-start;
+}
+.modal-profile-label{color:var(--accent);font-weight:700;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;padding-top:1px}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+.btn-dl{
+  flex:1;padding:11px;background:var(--accent);border:none;border-radius:var(--r2);
+  color:#fff;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;
+  transition:background .15s;display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn-dl:hover{background:var(--accentH)}
+.btn-dl:disabled{background:var(--bg4);color:var(--text3);cursor:not-allowed}
+.btn-dl svg{width:15px;height:15px;stroke-width:2.2}
+.btn-cancel{
+  padding:11px 16px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:var(--r2);color:var(--text2);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;
+}
+.btn-cancel:hover{background:var(--bg4);color:var(--text)}
+
+/* ── toast ───────────────────────────────────────────────────────── */
+#toast{
+  display:none;position:fixed;bottom:62px;left:50%;transform:translateX(-50%);
+  background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:9px 16px;font-size:11.5px;color:var(--text);font-weight:500;
+  z-index:400;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.7);
+  animation:fadeUp .2s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(8px)}}
+
+/* ── floating log panel ──────────────────────────────────────────── */
+#log-panel{
+  display:none;position:fixed;bottom:58px;right:16px;width:380px;max-height:200px;
+  background:var(--bg1);border:1px solid var(--border2);border-radius:var(--r2);
+  overflow-y:auto;z-index:50;padding:7px 0;
+  box-shadow:0 8px 32px rgba(0,0,0,.7);
+}
+#log-panel.visible{display:block}
+.lp-row{padding:2px 11px;font-family:'SF Mono','Consolas',monospace;font-size:10.5px;color:var(--text3)}
+.lp-row.error{color:var(--error)}
+.lp-row.warn{color:var(--warn)}
+.lp-row.success{color:var(--success)}
+
+/* ── utils ───────────────────────────────────────────────────────── */
+.spin{
+  display:inline-block;width:13px;height:13px;
+  border:2px solid rgba(255,255,255,.18);border-top-color:#fff;border-radius:50%;
+  animation:rot .6s linear infinite;flex-shrink:0;
+}
+@keyframes rot{to{transform:rotate(360deg)}}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border2)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- topbar -->
+<div id="topbar">
+  <a class="logo" href="#">
+    <div class="logo-spine">
+      <img src="/spine.png" alt="spined">
+    </div>
+    <span class="logo-name">spined<span>.lol</span></span>
+  </a>
+
+  <div class="topbar-search">
+    <div class="search-wrap">
+      <span class="search-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </span>
+      <input id="search-input" type="text" placeholder="Search games to download…" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="tool-pill"><span class="dot" id="dot-dd"></span>DDL</div>
+    <div class="tool-pill"><span class="dot" id="dot-sl"></span>SL</div>
+    <div class="tool-pill"><span class="dot" id="dot-api"></span>API</div>
+    <button id="tools-btn" onclick="navTo('tools')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Setup tools
+    </button>
+  </div>
+</div>
+
+<div id="body">
+
+<!-- sidebar -->
+<nav id="sidebar">
+  <div class="sidebar-label">Store</div>
+  <a class="nav-item active" data-tab="discover" onclick="navTo('discover');return false" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    Discover
+  </a>
+
+  <div class="sidebar-sep"></div>
+  <div class="sidebar-label">Library</div>
+  <a class="nav-item" data-tab="library" onclick="navTo('library');return false" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    My Library
+    <span class="badge" id="lib-badge">0</span>
+  </a>
+
+  <div class="sidebar-sep"></div>
+  <div class="sidebar-label">System</div>
+  <a class="nav-item" data-tab="log" onclick="navTo('log');return false" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Activity Log
+  </a>
+  <a class="nav-item" data-tab="tools" onclick="navTo('tools');return false" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+    Tools
+  </a>
+  <a class="nav-item" data-tab="profiles" onclick="navTo('profiles');return false" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    Patch Profiles
+  </a>
+
+  <div style="flex:1"></div>
+
+  <div id="job-indicator">
+    <div class="spin"></div>
+    <span id="job-ind-text">Downloading…</span>
+  </div>
+</nav>
+
+<!-- main -->
+<div id="main">
+
+  <!-- DISCOVER PAGE -->
+  <div class="page active" id="page-discover">
+    <div class="page-header">
+      <span class="page-title">Discover</span>
+    </div>
+    <div class="discover-section" id="discover-section">
+      <span class="discover-section-title" id="discover-section-title">Popular Picks</span>
+      <span class="discover-section-count" id="discover-section-count">22 games</span>
+    </div>
+    <div class="game-grid" id="game-grid"></div>
+  </div>
+
+  <!-- LIBRARY PAGE -->
+  <div class="page" id="page-library">
+    <div class="page-header">
+      <span class="page-title">My Library</span>
+      <span class="page-count" id="lib-count">0 games</span>
+    </div>
+    <div class="lib-grid" id="lib-grid">
+      <div class="empty" style="grid-column:1/-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <p>No games downloaded yet</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG PAGE -->
+  <div class="page" id="page-log">
+    <div class="page-header">
+      <span class="page-title">Activity Log</span>
+      <button class="log-clear-btn" onclick="clearLog()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+        Clear
+      </button>
+    </div>
+    <div id="log-container"><div class="log-row" style="color:var(--text3)">— Log is empty —</div></div>
+  </div>
+
+  <!-- TOOLS PAGE -->
+  <div class="page" id="page-tools">
+    <div class="page-header">
+      <span class="page-title">Tools</span>
+    </div>
+    <div class="setup-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Run <strong>&nbsp;setup.bat&nbsp;</strong> once to automatically download all tools.
+    </div>
+    <div class="tool-cards">
+      <div class="tool-card">
+        <div class="tool-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div>
+          <div class="tool-card-name">DepotDownloaderMod</div>
+          <div class="tool-card-desc">Downloads game depots from Steam — anonymous, depot key auth</div>
+        </div>
+        <div class="tool-card-status">
+          <div class="status-badge missing" id="badge-dd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Missing
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div>
+          <div class="tool-card-name">Steamless v3.1.0.3</div>
+          <div class="tool-card-desc">SteamStub DRM remover — pinned (v3.1.0.5 breaks Variant 2.1)</div>
+        </div>
+        <div class="tool-card-status">
+          <div class="status-badge missing" id="badge-sl">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Missing
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div>
+          <div class="tool-card-name">Goldberg Steam Emulator</div>
+          <div class="tool-card-desc">steam_api.dll + steam_api64.dll — bypasses Steam auth check</div>
+        </div>
+        <div class="tool-card-status">
+          <div class="status-badge missing" id="badge-api">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Missing
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="tool-card-name">Show Live Log Panel</div>
+          <div class="tool-card-desc">Float terminal logs over the UI during downloads (off by default)</div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text3)" id="toggle-logs-label">Off</span>
+          <input type="checkbox" id="toggle-logs" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)">
+        </label>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="6" cy="12" r="1.5" fill="currentColor"/><circle cx="10" cy="10" r="1" fill="currentColor"/><circle cx="10" cy="14" r="1" fill="currentColor"/><circle cx="8" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="14" cy="10" r="1.5"/><circle cx="17" cy="10" r="1.5"/><circle cx="14" cy="14" r="1.5"/><circle cx="17" cy="14" r="1.5"/></svg>
+        </div>
+        <div>
+          <div class="tool-card-name">Steam Controller Support</div>
+          <div class="tool-card-desc" id="steam-status-desc">Detecting Steam installation…</div>
+        </div>
+        <div class="tool-card-status">
+          <div class="status-badge missing" id="badge-steam">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+            Checking
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATCH PROFILES PAGE -->
+  <div class="page" id="page-profiles">
+    <div class="page-header">
+      <span class="page-title">Patch Profiles</span>
+      <span class="page-count" id="profiles-count">0 games</span>
+    </div>
+    <div class="setup-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      Per-game patching overrides — preferred exe, arch detection, skip lists, and extra file placement.
+    </div>
+    <div class="profiles-grid" id="profiles-grid">
+      <div class="empty" style="grid-column:1/-1"><div class="spin" style="width:20px;height:20px;border-top-color:var(--accent)"></div></div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+</div><!-- /body -->
+
+<!-- download bar -->
+<div id="dl-bar">
+  <div class="dl-thumb">
+    <img id="dl-thumb-img" src="" alt="">
+  </div>
+  <div class="dl-meta">
+    <div class="dl-name-row">
+      <span class="dl-game" id="dl-game">—</span>
+      <span class="dl-phase" id="dl-phase"></span>
+    </div>
+    <div class="dl-track">
+      <div class="dl-fill" id="dl-fill" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="dl-right">
+    <span class="dl-pct" id="dl-pct">0%</span>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<div id="log-panel"></div>
+<div id="toast"></div>
+
+<!-- modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <div class="modal-header">
+      <img id="m-img" src="" alt="">
+      <div class="modal-header-grad"></div>
+      <button class="modal-close" id="m-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-name" id="m-name"></div>
+      <div class="modal-tags" id="m-tags"></div>
+      <div class="modal-desc" id="m-desc"></div>
+      <div id="m-profile" class="modal-profile" style="display:none">
+        <span class="modal-profile-label">Profile</span>
+        <span id="m-profile-text"></span>
+      </div>
+      <div class="modal-hub" id="m-hub">
+        <div class="modal-hub-icon" id="m-hub-icon"></div>
+        <div>
+          <div id="m-hub-status"></div>
+          <div class="modal-hub-sub" id="m-hub-sub"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-dl" id="btn-dl" disabled>
+          <span class="spin" id="btn-spin" style="display:none"></span>
+          <svg id="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span id="btn-label">Download &amp; Play</span>
+        </button>
+        <button class="btn-cancel" id="btn-close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let ws, activeAppId = null, pendingAppId = null, pendingName = null;
+let allLogs = [], currentDlAppid = null;
+
+// ── websocket ─────────────────────────────────────────────────────────────
+function connectWS() {
+  ws = new WebSocket('ws://' + location.host);
+  ws.onmessage = ({ data }) => {
+    const m = JSON.parse(data);
+    if      (m.type === 'progress')  onProgress(m.value, m.phase);
+    else if (m.type === 'log')       onLog(m.text, m.level);
+    else if (m.type === 'job_start') onJobStart(m.appid, m.name);
+    else if (m.type === 'job_done')  onJobDone(m);
+    else if (m.type === 'job_state' && m.appid) onJobStart(m.appid, m.name);
+  };
+  ws.onclose = () => setTimeout(connectWS, 2000);
+}
+
+function onProgress(val, phase) {
+  const pct = Math.min(100, Math.max(0, val || 0));
+  document.getElementById('dl-fill').style.width = pct + '%';
+  document.getElementById('dl-pct').textContent  = Math.round(pct) + '%';
+  if (phase) document.getElementById('dl-phase').textContent = phase;
+}
+
+function onLog(text, level) {
+  allLogs.push({ text, level, ts: Date.now() });
+  if (activeAppId && showLogs) {
+    const p = document.getElementById('log-panel');
+    p.classList.add('visible');
+    const r = document.createElement('div');
+    r.className = 'lp-row ' + (level || '');
+    r.textContent = text;
+    p.appendChild(r);
+    p.scrollTop = p.scrollHeight;
+  }
+  const lc = document.getElementById('log-container');
+  if (lc.querySelector('.log-row')?.textContent === '— Log is empty —') lc.innerHTML = '';
+  const r2 = document.createElement('div');
+  r2.className = 'log-row ' + (level || '');
+  r2.textContent = text;
+  lc.appendChild(r2);
+  lc.scrollTop = lc.scrollHeight;
+}
+
+function onJobStart(appid, name) {
+  activeAppId = appid; currentDlAppid = appid;
+  document.getElementById('dl-bar').classList.add('visible');
+  document.getElementById('dl-game').textContent = name || ('App ' + appid);
+  document.getElementById('dl-phase').textContent = '';
+  document.getElementById('dl-thumb-img').src =
+    `https://cdn.akamai.steamstatic.com/steam/apps/${appid}/header.jpg`;
+  document.getElementById('job-indicator').classList.add('visible');
+  document.getElementById('job-ind-text').textContent = name || 'Downloading…';
+  onProgress(0);
+}
+
+function onJobDone(msg) {
+  activeAppId = null;
+  document.getElementById('job-indicator').classList.remove('visible');
+  onProgress(msg.success ? 100 : 0);
+  if (msg.success) {
+    setTimeout(() => {
+      document.getElementById('dl-bar').classList.remove('visible');
+      onProgress(0);
+      document.getElementById('dl-phase').textContent = '';
+      currentDlAppid = null;
+    }, 3000);
+    showToast('✓ ' + (msg.name || 'Game') + ' ready — check Library');
+    setTimeout(() => document.getElementById('log-panel').classList.remove('visible'), 5000);
+    renderLibrary();
+  } else {
+    showToast('⚠ Download failed — check Log for details');
+  }
+  document.getElementById('btn-dl').disabled = false;
+  document.getElementById('btn-spin').style.display = 'none';
+  document.getElementById('btn-icon').style.display  = '';
+  document.getElementById('btn-label').textContent   = 'Download & Play';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(t._t); t._t = setTimeout(() => t.style.display = 'none', 4000);
+}
+
+function clearLog() {
+  document.getElementById('log-container').innerHTML =
+    '<div class="log-row" style="color:var(--text3)">— Log is empty —</div>';
+  allLogs = [];
+}
+
+// ── navigation ────────────────────────────────────────────────────────────
+function navTo(tab) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.tab === tab));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  if (tab === 'library')  renderLibrary();
+  if (tab === 'profiles') renderProfiles();
+  if (tab === 'discover' && !document.getElementById('search-input').value.trim()) renderFeatured();
+}
+
+// ── image fallback cascade ────────────────────────────────────────────────
+// Sets up multi-URL fallback on an <img> element using the images[] array from API.
+// When all fail, hides the img and shows a generated placeholder div.
+function setupImgFallback(imgEl, images, name, placeholderEl) {
+  if (!images || !images.length) {
+    imgEl.style.display = 'none';
+    if (placeholderEl) placeholderEl.style.display = 'flex';
+    return;
+  }
+
+  let idx = 0;
+  imgEl.src = images[idx];
+
+  imgEl.onerror = () => {
+    idx++;
+    if (idx < images.length) {
+      imgEl.src = images[idx];
+    } else {
+      imgEl.style.display = 'none';
+      if (placeholderEl) placeholderEl.style.display = 'flex';
+    }
+  };
+  imgEl.onload = () => {
+    imgEl.style.display = 'block';
+    if (placeholderEl) placeholderEl.style.display = 'none';
+  };
+}
+
+function makePlaceholder(name, type = 'landscape') {
+  const letter = (name || '?').trim().charAt(0).toUpperCase();
+  if (type === 'portrait') {
+    return `<div class="lib-placeholder" style="display:none">
+      <div class="ph-letter">${esc(letter)}</div>
+      <div class="ph-name">${esc(name || '')}</div>
+    </div>`;
+  }
+  return `<div class="img-placeholder" style="display:none">
+    <div class="ph-letter">${esc(letter)}</div>
+    <div class="ph-name">${esc(name || '')}</div>
+  </div>`;
+}
+
+// ── featured games ────────────────────────────────────────────────────────
+const FEATURED_GAMES = [
+  { appid: 271590,  name: 'Grand Theft Auto V',         size: '~90 GB', genre: 'Action'    },
+  { appid: 413150,  name: 'Stardew Valley',             size: '~500 MB',genre: 'RPG'       },
+  { appid: 1145360, name: 'Hades',                      size: '~1.5 GB',genre: 'Rogue'     },
+  { appid: 504230,  name: 'Celeste',                    size: '~1.2 GB',genre: 'Platformer' },
+  { appid: 367520,  name: 'Hollow Knight',              size: '~1.2 GB',genre: 'Metroidvania'},
+  { appid: 945360,  name: 'Among Us',                   size: '~250 MB',genre: 'Social'    },
+  { appid: 105600,  name: 'Terraria',                   size: '~200 MB',genre: 'Sandbox'   },
+  { appid: 550,     name: 'Left 4 Dead 2',              size: '~8 GB',  genre: 'Co-op'     },
+  { appid: 456230,  name: 'Cuphead',                    size: '~3 GB',  genre: 'Action'    },
+  { appid: 391540,  name: 'Undertale',                  size: '~200 MB',genre: 'RPG'       },
+  { appid: 632360,  name: 'Risk of Rain 2',             size: '~4 GB',  genre: 'Rogue'     },
+  { appid: 588650,  name: 'Dead Cells',                 size: '~1.5 GB',genre: 'Rogue'     },
+  { appid: 1794680, name: 'Vampire Survivors',          size: '~100 MB',genre: 'Survival'  },
+  { appid: 427520,  name: 'Factorio',                   size: '~1.5 GB',genre: 'Strategy'  },
+  { appid: 646570,  name: 'Slay the Spire',             size: '~1 GB',  genre: 'Cards'     },
+  { appid: 1092790, name: 'Inscryption',                size: '~1.5 GB',genre: 'Cards'     },
+  { appid: 219150,  name: 'Hotline Miami',              size: '~500 MB',genre: 'Action'    },
+  { appid: 239030,  name: 'Papers, Please',             size: '~100 MB',genre: 'Puzzle'    },
+  { appid: 620,     name: 'Portal 2',                   size: '~10 GB', genre: 'Puzzle'    },
+  { appid: 960090,  name: 'Bloons TD 6',                size: '~1 GB',  genre: 'Tower Def' },
+  { appid: 250900,  name: 'The Binding of Isaac: Rebirth',size:'~1 GB', genre: 'Rogue'     },
+  { appid: 1966020, name: '20 Minutes Till Dawn',       size: '~100 MB',genre: 'Survival'  },
+];
+
+function renderFeatured() {
+  const label = document.getElementById('discover-section-title');
+  const count = document.getElementById('discover-section-count');
+  if (label) label.textContent = 'Popular Picks';
+  if (count) count.textContent = FEATURED_GAMES.length + ' games';
+
+  const items = FEATURED_GAMES.map(g => ({
+    appid:  g.appid,
+    name:   g.name,
+    price:  g.size,
+    images: [
+      `https://cdn.akamai.steamstatic.com/steam/apps/${g.appid}/header.jpg`,
+      `https://cdn.cloudflare.steamstatic.com/steam/apps/${g.appid}/header.jpg`,
+    ],
+    _genre: g.genre,
+    profile: null,
+  }));
+  renderGrid(items, true);
+}
+
+// ── search ────────────────────────────────────────────────────────────────
+let searchTimer;
+document.getElementById('search-input').addEventListener('focus', () => navTo('discover'));
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  const q = e.target.value.trim();
+  if (!q) { renderFeatured(); return; }
+  const label = document.getElementById('discover-section-title');
+  const count = document.getElementById('discover-section-count');
+  if (label) label.textContent = 'Search Results';
+  if (count) count.textContent = '…';
+  searchTimer = setTimeout(() => doSearch(q), 300);
+});
+
+async function doSearch(q) {
+  const g = document.getElementById('game-grid');
+  g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="spin" style="width:22px;height:22px;border-width:2.5px;border-top-color:var(--accent)"></div></div>';
+  try {
+    const items = await fetch('/api/search?q=' + encodeURIComponent(q)).then(r => r.json());
+    const count = document.getElementById('discover-section-count');
+    if (count) count.textContent = items.length + (items.length === 1 ? ' result' : ' results');
+    renderGrid(items);
+  } catch {
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><p style="color:var(--error)">Search failed</p></div>';
+  }
+}
+
+function renderGrid(items, isFeatured = false) {
+  const g = document.getElementById('game-grid');
+  if (!items.length) {
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>No results found</p></div>';
+    return;
+  }
+
+  g.innerHTML = items.map(i => {
+    const profBadge = i.profile?.supported
+      ? `<div class="profile-badge">✓ Patched</div>`
+      : '';
+    const sizeBadge = isFeatured && i.price
+      ? `<div class="size-badge">${esc(i.price)}</div>`
+      : '';
+    const genreBadge = isFeatured && i._genre
+      ? `<div class="genre-badge">${esc(i._genre)}</div>`
+      : '';
+    return `<div class="game-card" data-appid="${i.appid}" data-name="${esc(i.name)}">
+      <div class="game-card-img-wrap">
+        <img data-appid="${i.appid}" data-imgs='${JSON.stringify(i.images || [])}' data-name="${esc(i.name)}" alt="" loading="lazy">
+        ${makePlaceholder(i.name, 'landscape')}
+        ${profBadge}
+        ${sizeBadge}
+        ${genreBadge}
+      </div>
+      <div class="game-card-body">
+        <div class="game-card-name">${esc(i.name)}</div>
+        <div class="game-card-price">${isFeatured ? '' : esc(i.price || '')}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // wire up image fallbacks
+  g.querySelectorAll('.game-card-img-wrap img').forEach(img => {
+    const images  = JSON.parse(img.dataset.imgs || '[]');
+    const name    = img.dataset.name || '';
+    const wrapper = img.closest('.game-card-img-wrap');
+    const ph      = wrapper?.querySelector('.img-placeholder');
+    setupImgFallback(img, images, name, ph);
+  });
+
+  g.querySelectorAll('.game-card').forEach(c =>
+    c.addEventListener('click', () => openModal(+c.dataset.appid, c.dataset.name))
+  );
+}
+
+// ── library ───────────────────────────────────────────────────────────────
+async function renderLibrary() {
+  const g = document.getElementById('lib-grid');
+  try {
+    const lib = await fetch('/api/library').then(r => r.json());
+    const cnt = lib.length;
+    document.getElementById('lib-count').textContent = cnt + ' game' + (cnt !== 1 ? 's' : '');
+    document.getElementById('lib-badge').textContent = cnt;
+    if (!cnt) {
+      g.innerHTML = '<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><p>No games yet</p></div>';
+      return;
+    }
+
+    g.innerHTML = lib.sort((a,b) => (b.addedAt||0) - (a.addedAt||0)).map(e => {
+      const images = e.images || [
+        `https://cdn.akamai.steamstatic.com/steam/apps/${e.appid}/library_600x900.jpg`,
+        `https://cdn.akamai.steamstatic.com/steam/apps/${e.appid}/library_600x900_2x.jpg`,
+        `https://cdn.akamai.steamstatic.com/steam/apps/${e.appid}/header.jpg`,
+        `https://cdn.akamai.steamstatic.com/steam/apps/${e.appid}/capsule_616x353.jpg`,
+      ];
+      return `<div class="lib-card">
+        <div class="lib-card-art">
+          <img
+            data-imgs='${JSON.stringify(images)}'
+            data-name="${esc(e.name)}"
+            alt=""
+            loading="lazy"
+            style="display:block"
+          >
+          ${makePlaceholder(e.name, 'portrait')}
+          <div class="lib-card-hover-overlay">
+            <button class="btn-play-overlay" data-appid="${e.appid}" data-action="play">
+              <svg viewBox="0 0 12 12" fill="currentColor" width="11" height="11"><path d="M2 1l9 5-9 5z"/></svg>
+              Launch
+            </button>
+            <button class="btn-ctrl-overlay" data-appid="${e.appid}" data-action="controller">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="6" width="20" height="12" rx="4"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg>
+              Controller Mode
+            </button>
+            <button class="btn-ctrl-overlay" data-appid="${e.appid}" data-action="setexe" style="font-size:10px;opacity:.7">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Change Exe
+            </button>
+          </div>
+        </div>
+        <div class="lib-card-info">
+          <div class="lib-card-name">${esc(e.name)}</div>
+          <div class="lib-card-sub">AppID ${e.appid}${e.profile ? ' · profiled' : ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // wire image fallbacks
+    g.querySelectorAll('.lib-card-art img').forEach(img => {
+      const images = JSON.parse(img.dataset.imgs || '[]');
+      const name   = img.dataset.name || '';
+      const art    = img.closest('.lib-card-art');
+      const ph     = art?.querySelector('.lib-placeholder');
+      setupImgFallback(img, images, name, ph);
+    });
+
+    // wire buttons
+    g.querySelectorAll('[data-action="play"]').forEach(btn => {
+      btn.addEventListener('click', async ev => { ev.stopPropagation(); await launchGame(+btn.dataset.appid, false, btn); });
+    });
+    g.querySelectorAll('[data-action="controller"]').forEach(btn => {
+      btn.addEventListener('click', async ev => { ev.stopPropagation(); await launchGame(+btn.dataset.appid, true, btn); });
+    });
+    g.querySelectorAll('[data-action="setexe"]').forEach(btn => {
+      btn.addEventListener('click', async ev => { ev.stopPropagation(); await openExePicker(+btn.dataset.appid); });
+    });
+  } catch {
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><p style="color:var(--error)">Failed to load library</p></div>';
+  }
+}
+
+// ── patch profiles page ───────────────────────────────────────────────────
+async function renderProfiles() {
+  const g = document.getElementById('profiles-grid');
+  try {
+    const profiles = await fetch('/api/profiles').then(r => r.json());
+    const entries  = Object.entries(profiles);
+    document.getElementById('profiles-count').textContent = entries.length + ' games';
+    if (!entries.length) {
+      g.innerHTML = '<div class="empty" style="grid-column:1/-1"><p>No profiles loaded</p></div>';
+      return;
+    }
+    g.innerHTML = entries.map(([appid, p]) => `
+      <div class="profile-card">
+        <div class="profile-card-name">${esc(p.name)}</div>
+        <div class="profile-card-id">AppID ${appid}</div>
+        <div class="profile-card-exe">${esc(p.preferExe || 'auto-detect')}</div>
+        <div class="profile-card-arch">${esc(p.arch || 'x64')}</div>
+        <div class="profile-card-notes">${esc(p.notes || '')}</div>
+        ${p.skipExes?.length ? `<div style="font-size:9.5px;color:var(--text3);margin-top:3px">Skip: ${esc(p.skipExes.join(', '))}</div>` : ''}
+      </div>
+    `).join('');
+  } catch {
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><p style="color:var(--error)">Failed to load profiles</p></div>';
+  }
+}
+
+// ── launch helper ─────────────────────────────────────────────────────────
+async function launchGame(appid, withController, btn) {
+  const card  = btn.closest('.lib-card');
+  const btns  = card.querySelectorAll('button');
+  btns.forEach(b => { b.disabled = true; });
+
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = withController
+    ? `<div class="spin"></div> Starting Steam…`
+    : `<div class="spin"></div>`;
+
+  try {
+    const url = `/api/launch/${appid}` + (withController ? '?controller=1' : '');
+    const r   = await fetch(url, { method: 'POST' });
+    if (!r.ok) throw new Error((await r.json()).error || 'Launch failed');
+    showToast(withController ? '🎮 Launched with controller support!' : '🎮 Launched!');
+    setTimeout(() => {
+      btns.forEach(b => { b.disabled = false; });
+      btn.innerHTML = origHTML;
+    }, 2500);
+  } catch (e) {
+    btns.forEach(b => { b.disabled = false; });
+    btn.innerHTML = origHTML;
+    showToast('⚠ ' + e.message);
+  }
+}
+
+// ── modal ─────────────────────────────────────────────────────────────────
+async function openModal(appid, name) {
+  pendingAppId = appid; pendingName = name;
+  document.getElementById('m-name').textContent = name;
+  document.getElementById('m-img').src = `https://cdn.akamai.steamstatic.com/steam/apps/${appid}/header.jpg`;
+  document.getElementById('m-tags').innerHTML   = '';
+  document.getElementById('m-desc').textContent = 'Loading…';
+  document.getElementById('m-profile').style.display = 'none';
+  document.getElementById('m-hub-status').innerHTML = '<span style="color:var(--text2);font-size:12px">Checking availability…</span>';
+  document.getElementById('m-hub-sub').textContent  = '';
+  document.getElementById('m-hub-icon').innerHTML   =
+    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>';
+  document.getElementById('btn-dl').disabled          = true;
+  document.getElementById('btn-spin').style.display   = 'inline-flex';
+  document.getElementById('btn-icon').style.display   = 'none';
+  document.getElementById('btn-label').textContent    = 'Checking…';
+  document.getElementById('modal-overlay').classList.add('open');
+
+  try {
+    const data = await fetch('/api/game/' + appid).then(r => r.json());
+    const det  = data.details;
+
+    // set up header image with fallback cascade
+    const modalImg = document.getElementById('m-img');
+    const imgUrls  = data.images || [`https://cdn.akamai.steamstatic.com/steam/apps/${appid}/header.jpg`];
+    setupImgFallback(modalImg, imgUrls, name, null);
+
+    if (det) {
+      document.getElementById('m-name').textContent = det.name || name;
+      document.getElementById('m-desc').textContent = strip(det.short_description || '');
+      pendingName = det.name || name;
+      const tags = [det.developers?.[0], det.release_date?.date, ...(det.genres?.slice(0,3).map(g=>g.description)||[])].filter(Boolean);
+      document.getElementById('m-tags').innerHTML = tags.map(t => `<span class="modal-tag">${esc(t)}</span>`).join('');
+    }
+
+    // show profile info if available
+    if (data.profile) {
+      const p = data.profile;
+      document.getElementById('m-profile').style.display = 'flex';
+      document.getElementById('m-profile-text').textContent =
+        `${p.name || ''} · ${p.preferExe || 'auto'} · ${p.arch || 'x64'} · ${p.notes || ''}`;
+    }
+
+    if (data.hub?.available) {
+      document.getElementById('m-hub-icon').innerHTML =
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.2"><polyline points="20,6 9,17 4,12"/></svg>';
+      document.getElementById('m-hub-status').innerHTML = '<span class="modal-hub-ok">Available — ready to download</span>';
+      document.getElementById('m-hub-sub').textContent  = 'Found in ManifestHub3 · will auto-select main depot';
+      document.getElementById('btn-dl').disabled = !!activeAppId;
+    } else {
+      document.getElementById('m-hub-icon').innerHTML =
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+      document.getElementById('m-hub-status').innerHTML = '<span class="modal-hub-no">Not in ManifestHub3</span>';
+      document.getElementById('m-hub-sub').textContent  = "This game isn't available yet";
+      document.getElementById('btn-dl').disabled = true;
+    }
+  } catch (e) {
+    document.getElementById('m-hub-status').innerHTML = `<span style="color:var(--error)">Error: ${esc(e.message)}</span>`;
+  }
+  document.getElementById('btn-spin').style.display = 'none';
+  document.getElementById('btn-icon').style.display = '';
+  document.getElementById('btn-label').textContent  = 'Download & Play';
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+document.getElementById('m-close').onclick  = closeModal;
+document.getElementById('btn-close').onclick = closeModal;
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target.id === 'modal-overlay') closeModal();
+});
+
+document.getElementById('btn-dl').addEventListener('click', async () => {
+  if (!pendingAppId || activeAppId) return;
+  const appid = pendingAppId, name = pendingName;
+  document.getElementById('btn-dl').disabled        = true;
+  document.getElementById('btn-spin').style.display = 'inline-flex';
+  document.getElementById('btn-icon').style.display = 'none';
+  document.getElementById('btn-label').textContent  = 'Starting…';
+  closeModal();
+  try {
+    const r = await fetch('/api/download', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ appid, name }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Failed to start download');
+  } catch (e) {
+    showToast('⚠ ' + e.message);
+    document.getElementById('btn-dl').disabled        = false;
+    document.getElementById('btn-spin').style.display = 'none';
+    document.getElementById('btn-icon').style.display = '';
+    document.getElementById('btn-label').textContent  = 'Download & Play';
+  }
+});
+
+// ── tools ─────────────────────────────────────────────────────────────────
+async function refreshTools() {
+  try {
+    const t = await fetch('/api/tools').then(r => r.json());
+    setDot('dot-dd',  t.depotDownloader, 'badge-dd');
+    setDot('dot-sl',  t.steamless,       'badge-sl');
+    setDot('dot-api', t.steamApi,        'badge-api');
+  } catch {}
+
+  try {
+    const s = await fetch('/api/steamstatus').then(r => r.json());
+    const badge = document.getElementById('badge-steam');
+    const desc  = document.getElementById('steam-status-desc');
+    if (s.found) {
+      badge.className = 'status-badge ok';
+      badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="20,6 9,17 4,12"/></svg> Ready';
+      desc.textContent = s.running
+        ? 'Steam running — controller configs active'
+        : 'Steam found — will launch automatically on controller mode';
+    } else {
+      badge.className = 'status-badge missing';
+      badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Not found';
+      desc.textContent = 'Steam not installed — controller mode will launch game directly';
+    }
+  } catch {}
+}
+
+function setDot(dotId, ok, badgeId) {
+  document.getElementById(dotId).className = 'dot' + (ok ? ' ok' : '');
+  if (!badgeId) return;
+  const b = document.getElementById(badgeId);
+  if (ok) {
+    b.className = 'status-badge ok';
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="20,6 9,17 4,12"/></svg> Ready';
+  } else {
+    b.className = 'status-badge missing';
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Missing';
+  }
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function strip(s) { const d = document.createElement('div'); d.innerHTML = s; return d.textContent || ''; }
+
+// ── exe picker ────────────────────────────────────────────────────────────
+async function openExePicker(appid) {
+  let data;
+  try { data = await fetch(`/api/library/exes/${appid}`).then(r => r.json()); }
+  catch (e) { return showToast('⚠ Could not fetch exe list: ' + e.message); }
+
+  if (!data.candidates?.length) return showToast('⚠ No .exe files found in ' + (data.gameDir || 'game folder'));
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;';
+
+  const box = document.createElement('div');
+  box.style.cssText = 'background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r3);padding:20px;width:520px;max-width:calc(100vw - 32px);max-height:70vh;display:flex;flex-direction:column;gap:12px;';
+
+  box.innerHTML = `
+    <div style="font-size:14px;font-weight:700;color:var(--text)">Select Executable</div>
+    <div style="font-size:11px;color:var(--text3)">Current: <span style="color:var(--text2)">${esc(data.current || 'none')}</span></div>
+    <div id="exe-list" style="overflow-y:auto;display:flex;flex-direction:column;gap:4px;max-height:300px;"></div>
+    <button id="exe-cancel" style="align-self:flex-end;padding:6px 16px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);cursor:pointer;font-size:12px;">Cancel</button>
+  `;
+  overlay.appendChild(box);
+
+  const list = box.querySelector('#exe-list');
+  for (const c of data.candidates) {
+    const row = document.createElement('button');
+    row.style.cssText = 'text-align:left;padding:8px 12px;background:var(--bg3);border:1px solid ' +
+      (data.current === c.path ? 'var(--accent)' : 'var(--border)') +
+      ';border-radius:var(--r);cursor:pointer;color:var(--text);font-size:12px;';
+    row.innerHTML = `<span style="font-weight:600">${esc(c.name)}</span>
+      <span style="color:var(--text3);font-size:10.5px;margin-left:8px">${(c.size/1024/1024).toFixed(1)} MB · score ${c.score}</span>
+      <div style="font-size:10px;color:var(--text3);margin-top:2px;word-break:break-all">${esc(c.path)}</div>`;
+    row.addEventListener('click', async () => {
+      document.body.removeChild(overlay);
+      try {
+        const r = await fetch('/api/library/setexe', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ appid, execPath: c.path }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error);
+        showToast('✓ Exe updated: ' + c.name);
+        renderLibrary();
+      } catch (e) { showToast('⚠ ' + e.message); }
+    });
+    list.appendChild(row);
+  }
+
+  box.querySelector('#exe-cancel').addEventListener('click', () => document.body.removeChild(overlay));
+  overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+  document.body.appendChild(overlay);
+}
+
+// ── settings persistence ──────────────────────────────────────────────────
+let showLogs = localStorage.getItem('spined_showLogs') === 'true';
+function setShowLogs(val) {
+  showLogs = val;
+  localStorage.setItem('spined_showLogs', String(val));
+  const tog   = document.getElementById('toggle-logs');
+  const label = document.getElementById('toggle-logs-label');
+  if (tog)   tog.checked    = val;
+  if (label) label.textContent = val ? 'On' : 'Off';
+  if (!val)  document.getElementById('log-panel').classList.remove('visible');
+}
+(function wireLogToggle() {
+  const tog   = document.getElementById('toggle-logs');
+  const label = document.getElementById('toggle-logs-label');
+  if (!tog) return;
+  tog.checked      = showLogs;
+  if (label) label.textContent = showLogs ? 'On' : 'Off';
+  tog.addEventListener('change', e => setShowLogs(e.target.checked));
+})();
+
+connectWS();
+refreshTools();
+renderLibrary();
+renderFeatured();
+setInterval(refreshTools, 20000);
+</script>
+</body>
+</html>
